@@ -363,3 +363,5 @@ And a special thanks to [@aleris][3] who created the project itself and made ava
 ## Notes
 
 Wallet helpers are internal. See tests for usage.
+
+Usage: const w = require("./src/wallet/wallet.js");
