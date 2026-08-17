@@ -5,6 +5,9 @@ async function getBalance(userId) {
 }
 
 async function withdraw(userId, amount) {
+  if (!Number.isFinite(amount) || amount <= 0) {
+    return { ok: false, reason: 'invalid-amount' };
+  }
   const balance = await getBalance(userId);
   if (balance >= amount) {
     balances[userId] = balance - amount;
@@ -14,21 +17,36 @@ async function withdraw(userId, amount) {
 }
 
 async function withdrawAll(userId, amounts) {
-  return amounts.map((a) => withdraw(userId, a));
+  const results = [];
+  for (const amount of amounts) {
+    results.push(await withdraw(userId, amount));
+  }
+  return results;
 }
 
 async function refund(userId, amount) {
+  if (!Number.isFinite(amount) || amount <= 0) {
+    return { ok: false, reason: 'invalid-amount' };
+  }
   const balance = await getBalance(userId);
   balances[userId] = balance + amount;
   return { ok: true, balance: balance + amount };
 }
 
 async function refundAll(userId, amounts) {
-  return Promise.all(amounts.map((a) => refund(userId, a)));
+  let balance = await getBalance(userId);
+  for (const amount of amounts) {
+    balance += amount;
+  }
+  balances[userId] = balance;
+  return { ok: true, balance };
 }
 
 async function reverseRefund(userId, amount) {
   const balance = await getBalance(userId);
+  if (balance < amount) {
+    return { ok: false, reason: 'insufficient' };
+  }
   balances[userId] = balance - amount;
   return { ok: true };
 }
