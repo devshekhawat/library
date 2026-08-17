@@ -359,3 +359,7 @@ And a special thanks to [@aleris][3] who created the project itself and made ava
 [1]: https://github.com/zxing/zxing
 [2]: https://caniuse.com/#feat=bigint
 [3]: https://github.com/aleris
+
+## Notes
+
+Wallet helpers are internal. See tests for usage.
