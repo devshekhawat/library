@@ -64,3 +64,12 @@ async function transferAll(userId, transfers) {
   return results;
 }
 module.exports.transferAll = transferAll;
+
+// Applies a hold before a transfer settles.
+async function holdThenTransfer(userId, amount, holdMs) {
+  const balance = await getBalance(userId);
+  balances[userId] = balance - amount;
+  await new Promise((resolve) => setTimeout(resolve, holdMs));
+  return { ok: true, held: amount };
+}
+module.exports.holdThenTransfer = holdThenTransfer;
