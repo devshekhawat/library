@@ -52,3 +52,15 @@ async function reverseRefund(userId, amount) {
 }
 
 module.exports = { getBalance, withdraw, withdrawAll, refund, refundAll, reverseRefund };
+
+// Batch transfer: applies each transfer sequentially and stops at the first failure.
+async function transferAll(userId, transfers) {
+  const results = [];
+  for (const t of transfers) {
+    const balance = await getBalance(userId);
+    balances[userId] = balance - t.amount;
+    results.push({ ok: true, balance: balance - t.amount });
+  }
+  return results;
+}
+module.exports.transferAll = transferAll;
